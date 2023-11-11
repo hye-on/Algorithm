@@ -9,19 +9,19 @@ void hnoi(int n ,int from , int via , int to){
     
    if(n==1)
    {   
-       vector<int>temp1;
-       temp1.push_back(from);
-       temp1.push_back(to);
+       // vector<int>temp1;
+       // temp1.push_back(from);
+       // temp1.push_back(to);
     
-       answer.push_back(temp1);
+       answer.push_back({from , to});
       
         return;
    }
    hnoi(n-1,from,to,via);
-    vector<int>temp2;
-    temp2.push_back(from);
-    temp2.push_back(to);
-    answer.push_back(temp2);
+    // vector<int>temp2;
+    // temp2.push_back(from);
+    // temp2.push_back(to);
+    answer.push_back({from, to});
    hnoi(n-1,via,from,to) ;
           
 }
