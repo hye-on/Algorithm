@@ -4,7 +4,6 @@
 using namespace std;
 
 vector<vector<int>>dp(181,vector<int>(181,1000000));
-int alp_temp,cop_temp;
 int alp_p,cop_p,t;
 
 
