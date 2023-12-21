@@ -19,12 +19,10 @@ void bfs(int node){
     while(!q.empty()){
         int frontNode= q.front();
         q.pop();
-       // cout<<"dd "<<endl;
-       // cout<<"size "<<map[frontNode].size()<<endl;
+       
         for(int i =0 ;i< map[frontNode].size();i++){
             if(visit[map[frontNode][i]])
-            {    //cout<<"continue "<<map[frontNode][i]<<endl;
-                continue;}
+               continue;
             
             q.push(map[frontNode][i]);
             cntNode++;
@@ -43,21 +41,17 @@ int solution(int n, vector<vector<int>> wires) {
     }
     for(int i=0;i<wires.size();i++){
         //끊을 연결을 정하고
+        cntNode=1;
         conA=wires[i][0];
         conB=wires[i][1];
+        
         //완전탐색
-        cntNode=1;
+        
         bfs(conA);
-       // cout<<"conA "<<conA<<" conB "<<conB<<endl;
-     //   cout<<"conA "<<conA<<" cnt "<<cntNode<<endl;
         answer = min(answer,abs((n-cntNode)-cntNode));
-     //   cout<<answer<<endl;
-        cout<<endl;
-       
-       
+        
         
     }
     
-   // cout<<answer<<endl;
     return answer;
 }
