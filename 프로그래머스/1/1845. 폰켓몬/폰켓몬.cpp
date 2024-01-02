@@ -18,11 +18,9 @@ int solution(vector<int> nums)
             max_index=nums[i];
     }
   
-    for(int i=1;i<=max_index  ; i++){
+    for(int i=1;i<=max_index && select_number<pick_size ; i++){
         if(n[i])
             select_number++;
-        if(select_number==pick_size)
-            break;
         
     }
 
