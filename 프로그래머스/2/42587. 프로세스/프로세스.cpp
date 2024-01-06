@@ -6,35 +6,33 @@ using namespace std;
 
 int solution(vector<int> priorities, int location) {
     int answer = 0;
-    priority_queue<pair<int,int>> q;
-    queue<pair<int,int>> q2;
+    priority_queue<pair<int,int>> pri_q;
+    queue<pair<int,int>> q;
     for(int i=0;i<priorities.size();i++){
         
-         q.push({priorities[i], -i}); 
-         q2.push({priorities[i], -i});       
+         pri_q.push({priorities[i], -i}); 
+         q.push({priorities[i], -i});       
         
     }
     
-    while(!q2.empty()){
-        if(q2.front().first == q.top().first)
+    while(!q.empty()){
+        if(q.front().first == pri_q.top().first)
         {
-           // cout<<q2.front().first<<" " << q2.front().second<<endl;
+          
             answer++;
-            if(!(q2.front().second+location))
+            if(!(q.front().second+location))
                return answer;
+            pri_q.pop();
             q.pop();
-            q2.pop();
            
         }
         else{
             
-            q2.push(q2.front());
-            q2.pop();
+            q.push(q.front());
+            q.pop();
         }
         
-        // cout<<q.top().first<<" " << q.top().second;
-        // q.pop();
-        // cout<<endl;
+        
     }
     
     return answer;
