@@ -1,17 +1,16 @@
 #include <string>
 #include <vector>
-#include <iostream>
+
 using namespace std;
 vector<vector<int>> dungeon;
 vector<bool>chk;
 int answer;
 void dfs(int score,int cnt){
-    
-    if(score>=0)
-        if(cnt>answer)
-            answer=cnt;
+       
     if(score<0)
         return;
+    if(cnt>answer)
+            answer=cnt;
        
     for(int i=0;i<dungeon.size();i++){
         if(chk[i] || score<dungeon[i][0])
@@ -23,7 +22,6 @@ void dfs(int score,int cnt){
     
 }
 int solution(int k, vector<vector<int>> dungeons) {
-
     
     dungeon = dungeons;
     chk.resize(dungeons.size());
