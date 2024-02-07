@@ -1,6 +1,6 @@
 #include<vector>
 #include<queue>
-
+#include<iostream>
 using namespace std;
 int answer =-1;
 int n,m;
@@ -16,9 +16,9 @@ void bfs(int y, int x){
     node.push({y,x});
     cnt[0][0]=1;
     while(!node.empty()){
-
         int y = node.front().first;
         int x = node.front().second;
+        visit[y][x]=true;
         node.pop();
         if(y==m && x==n){
             answer=cnt[y][x];
@@ -31,8 +31,7 @@ void bfs(int y, int x){
                 continue;
             if(visit[dy][dx])
                 continue;
-            if(graph[dy][dx]){
-                visit[dy][dx]=true;
+            if(graph[dy][dx] && cnt[dy][dx] ==0){
                 node.push({dy,dx});
                 graph[y][x]=0;
                 cnt[dy][dx]=cnt[y][x]+1;
