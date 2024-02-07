@@ -30,9 +30,11 @@ def solution(maps):
                 if tile == 1:
                     next_num = num + 1
                     if dx == m - 1 and dy == n - 1:
-                        return next_num
+                        answer = next_num
+                        break
                     else:
                         q.append((dx, dy, next_num)) # 마지막 타일이 아닌 경우 이어서 탐색
+                    tile=0
 
     if answer == 10001:
         return -1
