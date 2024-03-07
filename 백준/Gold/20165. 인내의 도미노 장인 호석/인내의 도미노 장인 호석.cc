@@ -37,7 +37,7 @@ void attack(int y, int x, int d) {
 			chk[y][x] = true;	
 			//cout << y << " " << x << endl;
 			if (map[y][x] > n+1)
-				n += (map[y][x] - n);
+				n += (map[y][x] - (n+1));
 
 		}
 
