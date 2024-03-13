@@ -32,9 +32,6 @@ void hole(int y,int x) {
 	}
 
 }
-//접촉했을때 홀을 공기로 바꾸기
-
-
 
 int main() {
 
@@ -60,24 +57,11 @@ int main() {
 			hole(h-2, i);
 	}
 	
-	/*cout << endl;
-	for (int i = 0; i < h; i++) {
-		for (int j = 0; j < w; j++) {
-			cout << map[i][j] << " ";
-		}
-		cout << endl;
-	}*/
-	//녹이기 옆에 3이 있으면 녹이기
+
+	//옆에 3이 있으면 녹이기
 	
 	while (true) {
-		/*cout << cnt << endl;
-		cout << endl;
-		for (int i = 0; i < h; i++) {
-			for (int j = 0; j < w; j++) {
-				cout << map[i][j] << " ";
-			}
-			cout << endl;
-		}*/
+		
 		int dj[] = { 0,1,0,-1 };
 		int di[] = { 1,0,-1,0 };
 		for (int i = 1; i < h - 1; i++) {
@@ -93,13 +77,7 @@ int main() {
 
 			}
 		}
-		/*cout << "-1로" << endl;
-		for (int i = 0; i < h; i++) {
-			for (int j = 0; j < w; j++) {
-				cout << map[i][j] << " ";
-			}
-			cout << endl;
-		}*/
+		
 		cnt++;
 		//다 녹였나 확인
 		int tmp = 0;
@@ -135,13 +113,6 @@ int main() {
 			}
 		}
 		
-		/*cout << endl;
-	for (int i = 0; i < h; i++) {
-		for (int j = 0; j < w; j++) {
-			cout << map[i][j] << " ";
-		}
-		cout << endl;
-	}*/
 	}
 	cout << cnt << "\n" << ansN;
 	
