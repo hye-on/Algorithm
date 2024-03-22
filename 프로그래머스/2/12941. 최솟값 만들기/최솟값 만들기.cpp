@@ -1,21 +1,20 @@
 #include <iostream>
 #include<vector>
-#include<algorithm>
+#include<queue>
 using namespace std;
+
 
 int solution(vector<int> A, vector<int> B)
 {
     int answer = 0;
 
-    sort(A.begin(), A.end());
-    sort(B.begin(), B.end());
-    
-    int arr_size = A.size();
-    for(int i = 0; i< arr_size;i++){
-        answer+= A[i] * B[arr_size-i-1];
+    priority_queue<int>a(A.begin(),A.end());
+    priority_queue<int,vector<int>,greater<int>>b(B.begin(),B.end());
+    while(!a.empty()){
+        answer+=(a.top()*b.top());
+        a.pop();b.pop();
     }
-    
-   
+
 
     return answer;
 }
