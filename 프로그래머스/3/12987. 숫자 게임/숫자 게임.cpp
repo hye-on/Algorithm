@@ -20,15 +20,15 @@ int solution(vector<int> A, vector<int> B) {
         else{
             
             
-            for(int j=0;j<q.size();j++){
+          //  for(int j=0;j<q.size();j++){
                 if(q.front()>A[i]){
                     answer++;
                     q.pop();
                     pos=false;
-                    break;
+                    //break;
 
                 }
-            }
+           // }
                
             
             q.push(B[i]);
