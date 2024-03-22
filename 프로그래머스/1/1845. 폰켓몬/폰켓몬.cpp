@@ -1,30 +1,17 @@
 #include <vector>
-#include <iostream>
+#include<set>
 using namespace std;
 
-bool n[200001];
-
+set<int>s;
 int solution(vector<int> nums)
 {
     int answer = 0;
-    int select_number=0;
-    int pick_size = nums.size()/2;
-    int nums_size = nums.size();
-    int max_index=0;
-    for(int i=0; i<nums_size ;i++){
-      
-        n[nums[i]]=true;
-        if(nums[i]>max_index)
-            max_index=nums[i];
+    for(auto n : nums){
+        s.insert(n);
     }
-  
-    for(int i=1;i<=max_index && select_number<pick_size ; i++){
-        if(n[i])
-            select_number++;
-        
-    }
-
-    answer=select_number;
     
+    answer=s.size();
+    if(answer>nums.size()/2)
+        answer=nums.size()/2;
     return answer;
 }
