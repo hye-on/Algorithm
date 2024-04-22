@@ -7,6 +7,8 @@ using namespace std;
 
 map<string,int>dir;
 
+// memo : char to string
+// map.find()
 vector<int> solution(string msg) {
     vector<int> answer;
     //사전 1~26 초기화
