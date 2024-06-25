@@ -36,19 +36,17 @@ int main() {
 	int sum = 0;
 
 	int idx = v.size() - 1;
-	for (int i = v.size()-1; i >= 0; i--) {
-		for (; idx >= 0; idx--) {
-			sum += v[idx];
-			if (sum > N) {
-				sum -= v[i];
-				
-				idx--;
-				break;
-			}
-			if (sum == N)
-				ans++;
-		}
+	int s = 0, e = 0;
 
+	while (1) {
+		if (sum >= N)
+			sum -= v[s++];
+		else if (e == v.size())
+			break;
+		else 
+			sum += v[e++];
+
+		if (sum == N)ans++;
 	}
 	cout << ans;
 }
