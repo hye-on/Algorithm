@@ -1,5 +1,4 @@
 # [Gold III] 파일 합치기 - 11066 
-## test
 
 [문제 링크](https://www.acmicpc.net/problem/11066) 
 
