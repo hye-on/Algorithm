@@ -37,8 +37,7 @@ void dijikstra() {
 		
 		q.pop();
 	
-		if (curCost > dist[curY][curX])
-			continue;
+		
 		for (int i = 0; i < 4; i++) {
 			int nextY = curY + dy[i];
 			int nextX = curX + dx[i];
@@ -47,7 +46,7 @@ void dijikstra() {
 				continue;
 			int c = curCost + map[nextY][nextX];
 			
-			
+			//더 작은 경우에만 탐색, 
 			if (c < dist[nextY][nextX]) {
 				dist[nextY][nextX] =c;
 				q.push({ -c,{nextY,nextX} });
