@@ -3,7 +3,7 @@
 #include<queue>
 using namespace std;
 
-bool visit[150001];
+bool visit[150000];
 int n, k;
 
 
@@ -21,7 +21,7 @@ int bfs() {
 		}
 		//가중치가 작은 것을 먼저 방문하기 위해서
 		int x = 2;
-		while (cur * x < 150001 && visit[cur * x]==0) {
+		while (cur * x < 150000 && visit[cur * x]==0) {
 			q.push({ cur * x,d });
 			visit[cur * x] = 1;
 			x *= 2;
@@ -31,7 +31,7 @@ int bfs() {
 			visit[cur - 1] = 1;
 		}
 
-		if (cur + 1 < 150001 && visit[cur + 1]==0) {
+		if (cur + 1 < 150000 && visit[cur + 1]==0) {
 			q.push({ cur + 1,d + 1 });
 			visit[cur + 1] = 1;
 
