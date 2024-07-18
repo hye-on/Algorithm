@@ -1,5 +1,7 @@
 # [Silver I] 문자열 교환 - 1522 
 
+## note : j%s.size() : 인덱스를 나누기를 활용해서 할 수 있음
+
 [문제 링크](https://www.acmicpc.net/problem/1522) 
 
 ### 성능 요약
