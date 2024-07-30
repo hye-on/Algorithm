@@ -42,15 +42,7 @@ void check() {
 		num[o[i].first][o[i].second] = 'O';
 	}
 	
-	//if (o[0].first == 0   ) {
-	/*	cout << endl;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++)
-				cout << num[i][j] << " ";
-			cout << endl;
-		}
-		cout << "d====================" << endl;*/
-	//}
+	
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			if (num[i][j] == 'T') {
@@ -82,7 +74,7 @@ void backtracking(int y,int x, int depth) {
 	}
 	
 	for (int i = y; i < n; i++) {
-		for (int j =0 ; j < n; j++) {
+		for (int j =0 ; j < n; j++) { //int j=x 로 하면 안됨. n-1 이 T이거나 S 이면  x가 다음줄 0부터 시작 안함
 			if (visit[i][j])
 				continue;
 			if (num[i][j] != 'X')//선생이나 학생한테 장애물 놓을 수 없음
