@@ -2,10 +2,9 @@
 #include <vector>
 #include<iostream>
 using namespace std;
-//1:14
+//1:14  ~ 2:59 = 1시간 45분
 //처음 세팅
-//두장씩 뽑기 - 코인 쓰고 가져가기 or 버리기
-//n+1 만들면 다음 라운드 
+
 
 // 1 2 3 4 5 6 7 8 9 10 11 12 13
 // 짝이 정해져 있다.
@@ -40,7 +39,8 @@ int solution(int coin, vector<int> cards) {
             num[p1]=false;
             num[n+1-p1] = false;
             k++;
-        }else if(coin> 1 &&st[n+1 - p1]){
+        }//앞에 나왔던 것까지 같이 산다면 패스할 수 있음 -> 후보로 등록
+        else if(coin> 1 &&st[n+1 - p1]){ 
             k2++;
         }
          
@@ -49,37 +49,34 @@ int solution(int coin, vector<int> cards) {
             coin--;
             num[p2]=false;
             num[n+1-p2] = false;
-            //라운드 끝
             k++;
-            //cout<<p2<<endl;
-        }else if(coin> 1 &&st[n+1 - p2]){
-            
-            k2++;
         }
-        st[p1]=true;
-        st[p2]=true;
-        if(coin>1 &&(p1+p2)== (n+1) ){
+        else if(coin> 1 &&st[n+1 - p2]){     
             k2++;
         }
         
-      
-        if(k>0){
-            //가지고 있던 짝 씀
+        //앞에 나왔던 것들을 표시
+        st[p1]=true;
+        st[p2]=true;
+        
+        //뽑은 2개끼리 n+1이 될 수 있다면 후보로 표시
+        if(coin>1 &&(p1+p2)== (n+1) ){
+            k2++;
+        }
             
-            k--;
+        if(k>0){
+            //가지고 있던 짝(n+1) 씀        
+            k--; 
             r++;
             
-        }else if(coin>1 && k2>0){
+        }else if(coin>1 && k2>0){ //없다면 가능한후보 씀. 그리고 coin-=2
             k2--;
             coin-=2;
             r++;
         }
         else{
-            if(i!=n-2)
-                break;
-            if(nocard==true)
-                break;
-            nocard=true;
+            //라운드 진행못하면 끝
+            break;
         }
 
         
