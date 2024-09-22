@@ -4,11 +4,11 @@
 
 using namespace std;
 
-int m;
+long long m;
 long long ans;
 int n;
-vector<int> dis;
-vector<int>node;
+vector<long long> dis;
+vector<long long>node;
 int main() {
 	cin >> n;
 	dis.resize(n - 1);
