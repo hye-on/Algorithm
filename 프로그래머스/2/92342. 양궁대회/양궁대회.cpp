@@ -20,7 +20,7 @@ vector<int> ans(11);
 vector<int> result(11);
 vector<int> info;
 
-void checkAns(vector<int> num){
+void checkAns(vector<int>& num){
     int yourS =0;
     int myS =0;
     for(int i=0;i<11;i++){
@@ -48,7 +48,7 @@ void checkAns(vector<int> num){
         }
     }
 }
-void recursion(int depth,int rn ,vector<int>num){
+void recursion(int depth,int rn ,vector<int>&num){
 
     if(rn<0){
         return;
