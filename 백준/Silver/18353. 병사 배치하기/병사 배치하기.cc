@@ -17,18 +17,11 @@ int main() {
             a.push_back(t);
             continue;
         }
-        int idx = a.size()-1;
-        while(idx>=0){
-            if(a[idx]>t){
-                a[idx+1]=t;
-                break;
-            }
-            idx--;
-        }
+      
+       auto it = lower_bound(a.begin(), a.end(), t, greater<int>());
+            *it = t;
 
-        if (idx == -1) {
-            a[0] = t;
-        }
+      
     }
     cout<<n-a.size();
     return 0;
