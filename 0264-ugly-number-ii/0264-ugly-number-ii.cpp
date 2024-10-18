@@ -4,6 +4,9 @@ class Solution {
 public:
     int nthUglyNumber(int n) {
     vector<int> ugly(n);
+
+    //작은 수부터 2,3,5를 곱해줌. 1 2 3 5 6.... 있을때 2에 X 2,3 5  /  3에 X 2, 3, 5
+    //idx는 따로 관리 해야함 
     int i2 = 0, i3 = 0, i5 = 0;
   
     int next2 = 2, next3 = 3, next5 = 5;
