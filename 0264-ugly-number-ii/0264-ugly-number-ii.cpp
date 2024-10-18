@@ -1,9 +1,9 @@
 int n;
-int ugly[1690]; 
+
 class Solution {
 public:
     int nthUglyNumber(int n) {
-     
+    vector<int> ugly(n);
     int i2 = 0, i3 = 0, i5 = 0;
   
     int next2 = 2, next3 = 3, next5 = 5;
