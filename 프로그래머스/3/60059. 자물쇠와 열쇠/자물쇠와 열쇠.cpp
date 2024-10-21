@@ -6,7 +6,7 @@ vector<vector<int>> lock(60,vector<int>(60,0));
 vector<vector<int>> key;
 int l_size;
 int k_size;
-//07:30
+//07:30~8:23
 bool sol(int y,int x, vector<vector<int>> lock){
     int sum=0;
     for(int i=0;i<k_size;i++){
