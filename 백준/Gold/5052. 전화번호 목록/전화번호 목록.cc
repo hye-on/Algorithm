@@ -1,38 +1,71 @@
-#include<iostream>
-#include<string>
-#include<vector>
-#include<algorithm>
-#include<regex>
+#include <iostream>
+#include <string>
+
 using namespace std;
-int T;
-vector<string>number;
-string ans;
-int n;
-string tmp;
+
+char input[10000][11];
+
+struct TRIE {
+
+	bool isEnd;
+	TRIE* Node[10];
+	TRIE() {
+		isEnd = false;
+		for (int i = 0; i < 10; i++) {
+			Node[i] = NULL;
+		}
+	}
+
+	void insert(char* str) {
+		if (*str == '\0') {
+			isEnd = true;
+			return;
+		}
+		int cur = *str - '0';
+		if (Node[cur] == NULL) Node[cur] = new TRIE();
+		Node[cur]->insert(str + 1);
+	}
+
+	bool find(char* str) {
+		
+		if (*str == '\0') {
+			return false;
+		}
+		if (isEnd == true)
+			return true;
+
+		int cur = *str - '0';
+		if (Node[cur] == NULL) return false;
+		return Node[cur]->find(str + 1);
+	}
+
+
+};
+
 
 int main() {
-	cin >> T;
-	bool chk = false;
-	while (T--) {
-		ans = "YES";
-		cin >> n;
-		number.resize(n);
-		for (int i = 0; i < n; i++) {
-			cin >> tmp; 
-			number[i] = regex_replace(tmp, regex(" "),"");//공백제거
-		}
-		sort(number.begin(), number.end());
-		
-		for (int i = 0; i < n-1; i++) {
-			if (number[i + 1].size() < number[i].size())
-				continue;
-			if (number[i + 1].find(number[i]) == 0)
-				ans = "NO";
-			if (chk)
-				break;
-		}
-		cout << ans << endl;
-		chk = false;
 
+
+	int t, n;
+	cin >> t;
+	while (t--) {
+		cin >> n;
+		TRIE* root = new TRIE();
+		for (int i = 0; i < n; i++) {
+			cin >> input[i];
+			root->insert(input[i]);
+		}
+		int i;
+		bool ans = true;
+		for (i = 0; i < n; i++) {
+			if (root->find(input[i])) {
+				ans = false;
+				
+				break;
+			}
+		}
+		ans ? cout << "YES\n": cout << "NO\n";
 	}
+
+	return 0;
 }
