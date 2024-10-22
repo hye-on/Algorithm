@@ -4,30 +4,29 @@
 using namespace std;
 
 char input[10000][11];
-
-struct TRIE {
-
+struct Trie {
 	bool isEnd;
-	TRIE* Node[10];
-	TRIE() {
+	Trie* node[10];
+
+	Trie() {
 		isEnd = false;
 		for (int i = 0; i < 10; i++) {
-			Node[i] = NULL;
+			node[i] = NULL;
 		}
 	}
 
-	void insert(char* str) {
+	void insert(char * str) {
 		if (*str == '\0') {
 			isEnd = true;
 			return;
 		}
 		int cur = *str - '0';
-		if (Node[cur] == NULL) Node[cur] = new TRIE();
-		Node[cur]->insert(str + 1);
+		if(node[cur]==NULL)node[cur] = new Trie();
+		node[cur]->insert(str + 1);
+		
 	}
 
 	bool find(char* str) {
-		
 		if (*str == '\0') {
 			return false;
 		}
@@ -35,12 +34,14 @@ struct TRIE {
 			return true;
 
 		int cur = *str - '0';
-		if (Node[cur] == NULL) return false;
-		return Node[cur]->find(str + 1);
+		if (node[cur] == NULL)
+			return false;
+		return node[cur]->find(str + 1);
 	}
 
 
 };
+
 
 
 int main() {
@@ -54,7 +55,7 @@ int main() {
 	cin >> t;
 	while (t--) {
 		cin >> n;
-		TRIE* root = new TRIE();
+		Trie* root = new Trie();
 		for (int i = 0; i < n; i++) {
 			cin >> input[i];
 			root->insert(input[i]);
