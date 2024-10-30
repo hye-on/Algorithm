@@ -7,11 +7,15 @@ using namespace std;
 
 int T;
 int n, m;
-//07:07
+//07:07 ~ 07:27
 
 //1 누적합
 
 int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+
 	cin >> T;
 	cin >> n;
 	vector<int>a(n);
@@ -54,7 +58,7 @@ int main() {
 		//찾는 값이 있으면
 		if (bM.find(fV)!= bM.end()) {
 			long long cntB = bM.find(fV)->second;
-			ans += cntA * cntB;
+			ans += cntA * cntB; //int * int 결과가 long 이라서 틀렸음. 결과가 long일때 주의하기
 		}
 	}
 
