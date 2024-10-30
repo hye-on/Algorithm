@@ -9,8 +9,9 @@ int T;
 int n, m;
 //07:07 ~ 07:27
 
-//1 누적합 444ms
-//2 이분탐색
+//1 ) 누적합 444ms
+//2 ) 1개만 이분탐색 268ms , 2개 이분탐색 
+
 
 int main() {
 	ios::sync_with_stdio(false);
@@ -21,15 +22,17 @@ int main() {
 	cin >> n;
 	vector<int>a(n);
 	vector<int>aSum(n);
+	vector<int>aV;
+
 	map<int, int>aM;
 	int t = 0;
 	for (int i = 0; i < n; i++) {
 		cin >> a[i];
 		t += a[i];
 		aSum[i] = t;
-		aM[aSum[i]]++;
+		aV.push_back(aSum[i]);
 		for (int j = 0; j < i; j++) {
-			aM[aSum[i] - aSum[j]]++;
+			aV.push_back(aSum[i] - aSum[j]);
 		}
 	}
 
@@ -56,14 +59,13 @@ int main() {
 
 	//a 순회하면서 T-[a[i]] 존재하는지 찾기
 	long long ans=0;
-	for (auto it = aM.begin(); it != aM.end(); it++) {
-		int vA = it->first;
-		long long cntA = it->second;
+	for (int i = 0; i < aV.size();i++) {
+		int vA = aV[i];	
 		int fV = T - vA;
 		
 		auto it1 = upper_bound(bV.begin(), bV.end(), fV);
 		auto it2 = lower_bound(bV.begin(), bV.end(), fV);
-		ans += cntA * (it1 - it2);
+		ans += (it1 - it2);
 	}
 
 	cout << ans;
