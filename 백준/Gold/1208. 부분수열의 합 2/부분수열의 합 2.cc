@@ -5,7 +5,7 @@
 using namespace std;
 
 int n,s;
-//4:52
+//4:52 ~ 5:16
 vector<int>v(40);
 
 void calSum(int idx,int endIdx,int sum, vector<int>&vv) {
@@ -19,6 +19,9 @@ void calSum(int idx,int endIdx,int sum, vector<int>&vv) {
 	calSum(idx + 1, endIdx, sum+v[idx], vv);
 }
 int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
 	cin >> n>>s;
 
 	for (int i = 0; i < n; i++)
@@ -44,6 +47,8 @@ int main() {
 
 		
 	}
+	// s==0 이면 양쪽다 아무것도 안뽑는 케이스가 추가되어서 -1 / 오른쪽에서 0, 왼쪽에서 0 뽑는 경우
+	// 
 	if (s == 0)
 		ans--;
 	cout << ans;
