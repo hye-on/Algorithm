@@ -4,11 +4,12 @@
 using namespace std;
 
 
-//4:01
 int N, M, K;
 typedef long long ll;
 
 //세그먼트 트리 - 구현 기억 안남
+//모듈러 연산 때문에 리프노드부터 갱신해야함
+//곱셈이기 때문에 1을 반환해야함
 vector<ll>v;
 vector<ll>tree;
 int MOD = 1000000007;
@@ -59,6 +60,9 @@ ll multi(int start, int end, int node, int left, int right) {
 	
 }
 int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
 
 	cin >> N >> M >> K;
 
