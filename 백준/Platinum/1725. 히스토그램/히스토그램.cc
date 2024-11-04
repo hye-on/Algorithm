@@ -14,56 +14,30 @@ using namespace std;
 int n;
 stack<pair<int, int>>s;
 int main() {
+
 	cin >> n;
 
-	vector<int>histogram(n);
+	vector<int>histogram(n+1);
 	
-
 	for (int i = 0; i < n; i++) {
 		cin >> histogram[i];
 	
 	}
 
-	
-	vector<int>arrLeft(n);
-	stack<pair<int, int>>st; // 높이,idx
-	for (int i = 0; i < n; i++) {
-		while (!st.empty() && st.top().first >= histogram[i]) {
-			arrLeft[i]++;
-			arrLeft[i] += arrLeft[st.top().second];
-			st.pop();
-			
-		}
+	histogram[n] = - 1;
 		
-
-		st.push({ histogram[i],i });
-	}
-
-	vector<int>arrRight(n);
-	st = s;
-	for (int i = n-1; i >= 0; i--) {
-
+	stack<pair<int, int>>st; // 높이,idx
+	int ans = 0;
+	for (int i = 0; i <= n; i++) {
+		int minPos = i;
 		while (!st.empty() && st.top().first >= histogram[i]) {
-			arrRight[i]++;
-			arrRight[i] += arrRight[st.top().second];
+			auto [h, pos] = st.top();
+			ans = max(h * (i - pos), ans);
+			minPos = min(i, st.top().second); // 2, 1일때 2를 pop함 하지만 1의 높이로 0번째 인덱스까지 그릴 수 있음
 			st.pop();
 		}
 
-		st.push({ histogram[i],i });
-	}
-
-
-	/*for (int i = 0; i < n; i++) {
-		cout << arrLeft[i] << " " << arrRight[i] << endl;
-
-	}*/
-
-	int ans = 0, area = 0;
-	for (int i = 0; i < n; i++) {
-		if (histogram[i] == 0)
-			continue;
-		area = histogram[i] * (arrLeft[i] + arrRight[i] + 1);
-		ans = max(area, ans);
+		st.push({ histogram[i],minPos });
 	}
 	cout << ans;
 }
