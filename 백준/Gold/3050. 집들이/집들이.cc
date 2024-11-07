@@ -37,6 +37,10 @@ void bfs(pair<int, int>start) {
 
 }
 int main() {
+    ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+    
 	cin >> r >> c;
 	char t = '.';
 	for (int i = 0; i < r; i++) {
