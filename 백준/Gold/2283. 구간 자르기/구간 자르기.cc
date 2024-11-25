@@ -17,6 +17,9 @@ int arr[1000002];
 int sum;
 
 int main() {
+    ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
 	cin >> n >> k; 
 	int start = 0, end = 0,maxIdx=0;
 	
