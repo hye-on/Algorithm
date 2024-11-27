@@ -1,92 +1,89 @@
 #include <string>
 #include <vector>
-#include<iostream>
-#include<cstring>
-using namespace std;
-//8:54 
-vector<int> answer;
-int n;
-int cntW[11][12];//cntW[a][b] 는 a가 b에게 이긴 횟수
-vector<vector<int>> dice;
-vector<int> myDice(5);
-vector<int> yourDice(5);
-int myScore[601]; //최대 점수가 600
-int yourScore[601]; //최대 점수가 600
-bool visit[10];
-int maxW;
-void cal(int idx,int sum, bool flag){
-    if(idx==n/2){
-        if(flag)
-            myScore[sum]++;
-        else
-            yourScore[sum]++;
-        return;
-    }
-    for(int i=0 ; i<6;i++){
-        if(flag)
-            cal(idx+1,sum+ dice[myDice[idx]][i],flag);
-        else
-            cal(idx+1,sum+dice[yourDice[idx]][i],flag);
-    }
-}
-int calW(){
-    int wC=0;
-    for(int i=1;i<601;i++){
-        if(myScore[i]==0)
-            continue;
-        for(int j=1;j<i;j++){
-            if(yourScore[j]==0)
-                continue;
-            wC+=(myScore[i]*yourScore[j]);
-        }
-            
-    }
-    return wC;
-}
-//가능한 조합 고르기
-//TODO : 중복되는 계산 있음. 34에서 진것은 12에서 이긴 것이랑 똑같다.
-void backtracking(int depth,int idx){
-    
-    //n/2개 다고름
-    if(depth==(n/2)){
-        int idx1=0,idx2=0;
-        for(int i=0;i<n;i++){
-            if(visit[i])
-                myDice[idx1++]=i;
-            else
-                yourDice[idx2++]=i;
-        }
-       //이긴 경우의수 세기
-        cal(0,0,true);
-        cal(0,0,false);
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <set>
 
-        int w = calW();  
-        //최대 이긴 경우의 수이면
-        if(w>maxW){
-            for(int i=0;i<n/2;i++){
-                answer[i]=myDice[i]+1;
-            }
-            maxW=w;
-        }
-        //myScore,yourScore 초기화
-        memset(myScore,0,sizeof(myScore));
-        memset(yourScore,0,sizeof(yourScore));
+using namespace std;
+
+//4:16
+//2차원 배열에 주사위 1:1로 비교했을 때 이길 수 있는 경우의 수 저장
+//조합으로 2:2로 팀 나눠서 계산
+int n;
+vector<int>num;
+vector<vector<int>> dice;
+set<string>chk;
+
+void cntCase(int idx,int depth,int sum,map<int,int>&m){
+    if(idx == depth){
+        m[sum]++;
         return;
     }
-    for(int i = idx;i<n;i++){
-      
-        visit[i]=true; 
-        backtracking(depth+1,i+1);
-        visit[i]=false;
+    for(int i=0;i<6;i++){
+        cntCase(idx+1,depth,sum+dice[num[idx]][i],m);
     }
+}
+
+int calWin(){
+    //6개의 면
+    int aWin=0;
+    int bWin =0;
+    map<int,int>myScore;
+    map<int,int>yourScore;
+    cntCase(0,n/2,0,myScore);
+    cntCase(n/2,n,0,yourScore);
+    
+    for(auto it = myScore.begin();it!=myScore.end();it++){
+        for(auto it2 = yourScore.begin();it2!=yourScore.end();it2++){
+            int t1 = it->first;
+            int t2 = it2->first;
+            if(t1>t2)
+                aWin+=(it->second*it2->second);
+            else if(t1<t2)
+                bWin+=(it->second*it2->second);
+        }
+    }
+
+    return aWin;
+    
 }
 vector<int> solution(vector<vector<int>> _dice) {
-    
-    dice = _dice;
-    n = dice.size();
+    dice  = _dice;
+    vector<int> answer;
+     n = dice.size();
     answer.resize(n/2);
     
-    backtracking(0,0);
-   
+    vector<vector<int>>winCnt(n,vector<int>(n,0));
+     
+    for(int i=0;i<n;i++)
+        num.push_back(i);
+    
+    
+    // 조합으로 2:2로 팀 나눠서 계산
+    int ans=0;
+    int du =0;
+    int maxWin=0;
+    string temp="";
+    do{
+       temp="";
+        for(int i=0;i<n/2;i++)
+            temp+=num[i]+'0';
+        sort(temp.begin(), temp.end());
+        if(chk.find(temp)!=chk.end())
+            continue;
+        chk.insert(temp);
+       
+        int t = calWin();
+     
+        if(t>maxWin){
+           
+            for(int i=0;i<n/2;i++)
+                answer[i] = num[i]+1;
+            maxWin=t;
+        }
+       
+    }while(next_permutation(num.begin(),num.end()));
+    sort(answer.begin(),answer.end());
     return answer;
 }
