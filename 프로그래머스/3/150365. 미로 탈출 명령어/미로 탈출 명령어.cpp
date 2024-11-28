@@ -1,79 +1,65 @@
 #include <string>
-#include <vector>
-#include<queue>
-#include<iostream>
-#include<algorithm>
-#include<stack>
 using namespace std;
-//7:12
-char map[51][51];
-string ans;
 
-
-//구조체 비교함수 기억안나서 (자신없어서) pair사용
-int dx[] = {1,0,0,-1};
-int dy[] = {0,-1,1,0};
-char dir[] = {'d','l','r','u'};
-int k,n,m,r,c;
-
-int GetDist(pair<int, int> cur)
-{
-    return abs(r- cur.first) + abs(c - cur.second);
-}
-
-void dfs(int cnt,pair<int,int> node, string d){
-
-        if(ans.size()>0)
-            return;
-
-        int cur_x = node.first;
-        int cur_y = node.second;
+string solution(int n, int m, int x, int y, int r, int c, int k) {
+    // 각 방향으로 가야하는 최소 횟수 계산
+    int down = max(0, r-x);
+    int left = max(0, y-c);
+    int up = max(0, x-r);
+    int right = max(0, c-y);
     
-        if((k-cnt-GetDist(node)) < 0  || (k-cnt-GetDist(node))%2 == 1)
-        return;
+    // 불가능한 경우 체크
+    int minDist = down + left + up + right;
+    if(k < minDist || (k - minDist) % 2 == 1) 
+        return "impossible";
+        
+    // 상쇄 이동 횟수
+    int pair = (k - minDist) / 2;
+    int curX = x, curY = y;
+    string answer = "";
     
-        if(cnt>k)
-            return;
-
-        if(cnt==k){
-            if(cur_x == r && cur_y == c){
-                ans = d;
-                return;     
+    for(int i = 0; i < k; i++) {
+        // down (아래로 갈 수 있고, 필수 이동이 남았거나 상쇄 이동이 가능할 때)
+        if(curX < n && (down > 0 || pair > 0)) {
+            answer += 'd';
+            curX++;
+            if(down > 0) down--;
+            else {
+                pair--;
+                up++;
             }
-            return;
         }
-        
-        for(int i=0;i<4;i++){
-
-            int nx = cur_x + dx[i];
-            int ny = cur_y + dy[i];
-            if(ny>m || ny<=0 || nx>n || nx<=0)
-                continue;
-            d+=dir[i];
-            dfs(cnt+1,{nx,ny},d);
-            d.pop_back();
-            
+        // left
+        else if(curY > 1 && (left > 0 || pair > 0)) {
+            answer += 'l';
+            curY--;
+            if(left > 0) left--;
+            else {
+                pair--;
+                right++;
+            }
         }
- 
-    
-}
-string solution(int _n, int _m, int x, int y, int _r, int _c, int _k) {
-    string answer = "impossible";
-    k= _k;
-    n= _n;
-    m= _m;
-    r= _r;
-    c= _c;
-    int distance = abs(x-r) +abs(y-c);
-  //  cout<<distance-k;
-    if((k-distance)%2 !=0 || k < distance )
-        return answer;
-        
-    dfs(0,{x,y},"");
-   if(ans.size()>0)
-       answer = ans;
-
-    
+        // right
+        else if(curY < m && (right > 0 || pair > 0)) {
+            answer += 'r';
+            curY++;
+            if(right > 0) right--;
+            else {
+                pair--;
+                left++;
+            }
+        }
+        // up
+        else if(curX > 1 && (up > 0 || pair > 0)) {
+            answer += 'u';
+            curX--;
+            if(up > 0) up--;
+            else {
+                pair--;
+                down++;
+            }
+        }
+    }
     
     return answer;
 }
