@@ -29,14 +29,17 @@ int checkTarget() {
     // 모든 노드에 대해 목표 값과 현재 방문 횟수를 비교
     for (int i = 0; i < visitCount.size(); i++) {
         // 목표 값에 도달하지 않았지만 더 방문할 수 있는 경우
+        //1. 다 3으로 채워넣어도 모자라면 더 넣어야 함
         if (visitCount[i] * 3 < targetValues[i]) {
             result = 1; // 계속 진행 가능
         }
         // 목표 값보다 더 많이 방문한 경우 목표 달성 불가능
+        //2. 다 1로 채워도 넘치면 목표 달성 불가능 
         if (targetValues[i] < visitCount[i]) {
             return 2; // 목표 달성 불가능
         }
     }
+    //3. 만약 다 3으로 채웠을 때 모든 노드가 달성 가능하면 공을 더 넣치 않고 어떤 공을 넣을지 결정
     return result; // 0이면 목표 달성 가능, 1이면 계속 진행
 }
 
@@ -56,6 +59,7 @@ vector<int> solution(vector<vector<int>> edges, vector<int> target) {
     }
     
     // 자식 노드들을 사전 순으로 정렬
+    //초기길 설정
     for (int i = 0; i < adjList.size(); i++) {
         sort(adjList[i].begin(), adjList[i].end());
     }
@@ -72,6 +76,8 @@ vector<int> solution(vector<vector<int>> edges, vector<int> target) {
         int leafNode = getLeafNode(); // 리프 노드 찾기
         visitedOrder.push_back(leafNode); // 방문 순서 저장
         visitCount[leafNode] += 1; // 해당 노드의 방문 횟수 증가
+        
+        //조건 1 :  모든 경우 중 가장 적은 숫자를 사용
         int status = checkTarget(); // 목표 달성 여부 확인
         if (status == 0) { // 목표 달성 시 종료
             break;
@@ -80,10 +86,15 @@ vector<int> solution(vector<vector<int>> edges, vector<int> target) {
         }
     }
 
-    // 사전 순으로 값을 할당하여 최종 결과 생성
+    // 조건 2 : 사준순으로 가장 빠른 경우 : 사전 순으로 값을 할당하여 최종 결과 생성
     vector<int> result;
     for (int node : visitedOrder) {
-        visitCount[node] -= 1; // 방문 횟수 다시 감소
+        visitCount[node] -= 1; // 방문 횟수 감소
+        
+        //사전순이기 때문에 1을 먼저 넣는 것이 좋음 
+        //a: 1을 넣었을 때 남은 수 :  targetValues[node] - 1
+        //b:  방문횟수에서 1개를 쓰고(위에서 1감소) 나은 개수로 채울수 있는 최대 수 : visitCount[node] * 3
+        // b가 더 크다면 가능하다. 
         if (visitCount[node] * 3 >= targetValues[node] - 1) {
             result.push_back(1);
             targetValues[node] -= 1;
