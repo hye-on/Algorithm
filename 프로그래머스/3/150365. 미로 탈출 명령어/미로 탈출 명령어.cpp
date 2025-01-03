@@ -1,57 +1,62 @@
 #include <string>
+#include <vector>
+#include <cmath>
+#include <iostream>
 using namespace std;
 
-string solution(int n, int m, int x, int y, int r, int c, int k) {
-   // 각 방향으로의 최소 이동 횟수 계산
-   int down = max(0, r-x);
-   int left = max(0, y-c);
-   int up = max(0, x-r);
-   int right = max(0, c-y);
+//dfs or 그리디
+int n,m,r,c,k;
+string answer;
+// d l r u
+int dy[] ={1,0,0,-1};
+int dx[] ={0,-1,1,0};
+char cc[] ={'d','l','r','u'};
+
+void dfs(string dir,int dist,int i,int j){ //변수 선언 때문에 헷갈렸음
+    if(answer.size()>0)
+        return;
+    if(dist==0 ){   
+        if(i==r && j==c)
+            answer=dir;
+        return;
+    }
+    int distance = abs(r-i) + abs(c-j); //변수 오타 
+    
+    if((dist-distance)%2==1)
+        return;
+   if(distance>dist)
+       return;
+    
+    for(int ii=0;ii<4;ii++){
+        int ny = i + dy[ii];
+        int nx = j + dx[ii];
+        if(ny>=n || ny<0 || nx>=m || nx<0)
+            continue;
+        distance = abs(r-ny) + abs(c-nx);
+        
+        if((dist-1-distance)%2==0)
+            dfs(dir+cc[ii],dist-1,ny,nx);
+    }
+
+}
+string solution(int _n, int _m, int x, int y, int _r, int _c, int _k) {
    
-   // 최소 이동 거리
-   int dist = down + left + up + right;
-   if(k < dist || (k - dist) % 2 == 1) return "impossible";
-   
-   int spare = (k - dist) / 2;  // 여분의 이동 횟수
-   string answer = "";
-   
-   // 1. down 먼저
-   for(int i = 0; i < down; i++) 
-       answer += 'd';
-   
-   // 아래로 더 갈 수 있으면 최대한 이동
-   int extra_down = 0;
-   while(spare > 0 && x + down + extra_down + 1 <= n) {
-       answer += 'd';
-       extra_down++;
-       spare--;
-   }
-   
-   // 2. left 처리
-   for(int i = 0; i < left; i++) 
-       answer += 'l';
+    //주어지는 좌표랑 달라서 틀렸음 0인덱스 1인덱스 주의
+    n=_n;
+    m=_m;
+    r=_r-1;
+    c=_c-1;
+    k=_k;
+    x--;
+    y--;
+    
+    int distance = abs(x-r) + abs(y-c);
+    if(k<distance)
+        return "impossible";
+    else if((k-distance)%2==1)
+        return "impossible";
+    
+    dfs("",k,x,y);
        
-   // 왼쪽으로 더 갈 수 있으면 최대한 이동
-   int extra_left = 0;
-   while(spare > 0 && y - left - extra_left - 1 >= 1) {
-       answer += 'l';
-       extra_left++;
-       spare--;
-   }
-   
-   // 3. spare가 남았다면 rl 반복으로 소진
-   while(spare > 0) {
-       answer += "rl";
-       spare--;
-   }
-   
-   // 4. right 처리 (extra_left만큼 더 이동)
-   for(int i = 0; i < right + extra_left; i++) 
-       answer += 'r';
-   
-   // 5. up 처리 (extra_down만큼 더 이동)
-   for(int i = 0; i < up + extra_down; i++) 
-       answer += 'u';
-   
-   return answer;
+    return answer;
 }
