@@ -1,23 +1,15 @@
+
+
+const operations = {
+    w: (n) => n+1,
+    s: (n) => n-1,
+    d: (n) => n+10,
+    a: (n) =>n-10,
+};
+
 function solution(n, control) {
-    var answer = n;
-    for(let i=0;i<control.length;i++){
-         
-        switch(control[i]){
-            case 'w':
-                answer++;
-                break;
-            case 's':
-                answer--;
-                break;
-            case 'd':
-                answer+=10;
-                break;
-            case 'a':
-                answer-=10;
-                break;
-                
-           
-        }
-    }
-    return answer;
+
+    //콜백, 초기값
+    // 콜백 : 누적값(이전값), 현재 값, 인덱스, 전체 배열
+    return [...control].reduce((prev,op) => operations[op](prev),n);
 }
