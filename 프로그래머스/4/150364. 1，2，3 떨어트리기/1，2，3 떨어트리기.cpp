@@ -2,110 +2,120 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
+#include <iostream>
+
 using namespace std;
+//그리디
+//먼저 떨어트리고 그 다음 조합
 
-vector<queue<int>> childQueue; // 각 노드의 자식 노드를 순차적으로 방문하기 위한 큐
-vector<vector<int>> adjList; // 각 노드의 자식 노드 목록을 저장하는 인접 리스트
-vector<int> visitCount; // 각 노드가 현재까지 몇 번 방문되었는지 저장
-vector<int> targetValues; // 각 노드의 목표 값을 저장
-
-// 현재 리프 노드를 찾고 큐를 순환시키는 함수
-int getLeafNode() {
-    int currentNode = 1; // 시작 노드
-    int nextNode;
-    // 리프 노드를 찾을 때까지 계속 자식 노드를 탐색
-    while (!childQueue[currentNode].empty()) {
-        nextNode = childQueue[currentNode].front(); // 현재 노드의 첫 번째 자식 노드를 가져옴
-        childQueue[currentNode].pop(); // 해당 자식 노드를 큐에서 제거
-        childQueue[currentNode].push(nextNode); // 다시 큐에 넣어 순환 방문 준비
-        currentNode = nextNode; // 자식 노드로 이동
-    }
-    return currentNode; // 최종적으로 리프 노드를 반환
-}
-
-// 목표 값을 만족할 수 있는지 확인하는 함수
-int checkTarget() {
-    int result = 0;
-    // 모든 노드에 대해 목표 값과 현재 방문 횟수를 비교
-    for (int i = 0; i < visitCount.size(); i++) {
-        // 목표 값에 도달하지 않았지만 더 방문할 수 있는 경우
-        //1. 다 3으로 채워넣어도 모자라면 더 넣어야 함
-        if (visitCount[i] * 3 < targetValues[i]) {
-            result = 1; // 계속 진행 가능
+//필요한 변수
+//리프노드에 들어간 숫자 개수
+// 도착한 리프노드 순서 -> 사전순을 위해
+ queue<int>link[102];
+int n;
+vector<int>node;   
+vector<int> target;
+vector<int>v;
+int drop(vector<int>&node){
+    int cur =1;
+    int next=0;
+    while(true){
+        
+        //리프노드
+        if(link[cur].empty()){
+            v.push_back(cur-1);
+          
+            node[cur-1]++;
+            
+            int ret =1;
+            for(int i=0;i<n;i++){
+                 //블가능 하면 0 
+                if(target[i]==0 && node[i]>0){
+                    ret =0;
+                    break;
+                }
+                //1로 채워도 타겟보다 클 때 
+                if(target[i]>0 && node[i]> target[i]){
+                    ret =0;
+                    break;
+                }
+                 //더 떨어트려봐야 알 것 같으면 2
+                if(target[i]>0 && node[i]*3<target[i])   
+                    ret=2;
+                
+            }
+           
+           
+            return ret;
         }
-        // 목표 값보다 더 많이 방문한 경우 목표 달성 불가능
-        //2. 다 1로 채워도 넘치면 목표 달성 불가능 
-        if (targetValues[i] < visitCount[i]) {
-            return 2; // 목표 달성 불가능
-        }
-    }
-    //3. 만약 다 3으로 채웠을 때 모든 노드가 달성 가능하면 공을 더 넣치 않고 어떤 공을 넣을지 결정
-    return result; // 0이면 목표 달성 가능, 1이면 계속 진행
-}
-
-// 주어진 트리의 간선과 목표 값을 바탕으로 해답을 찾는 함수
-vector<int> solution(vector<vector<int>> edges, vector<int> target) {
-    // 노드 간의 연결 정보 및 자식 노드 정보 초기화
-    int nodeCount = target.size();
-    adjList = vector<vector<int>>(nodeCount + 1); // 인접 리스트 초기화
-    childQueue = vector<queue<int>>(nodeCount + 1); // 각 노드의 자식 노드 큐 초기화
-    visitCount = vector<int>(nodeCount + 1, 0); // 방문 횟수 초기화
-    targetValues = vector<int>(1, 0); // 인덱스 0은 사용하지 않음
-    targetValues.insert(targetValues.end(), target.begin(), target.end()); // target 복사
-
-    // 간선 정보를 이용해 인접 리스트 구성
-    for (const auto& edge : edges) {
-        adjList[edge[0]].push_back(edge[1]);
+        next = link[cur].front();
+        link[cur].push(link[cur].front());
+        link[cur].pop();
+        cur = next;
+      
     }
     
-    // 자식 노드들을 사전 순으로 정렬
-    //초기길 설정
-    for (int i = 0; i < adjList.size(); i++) {
-        sort(adjList[i].begin(), adjList[i].end());
+}
+vector<int> solution(vector<vector<int>> edges, vector<int> _target) {
+    vector<int> answer;
+    target = _target;
+    priority_queue<int>linkT[102];
+    node.resize(target.size());
+    n = target.size();
+    for(int i=0;i<edges.size();i++){
+        int p = edges[i][0];
+        int c = edges[i][1];
+        linkT[p].push(-c);
+      
     }
-
-    // 각 노드의 자식 노드를 큐에 넣음
-    for (int i = 0; i < adjList.size(); i++) {
-        for (int child : adjList[i]) {
-            childQueue[i].push(child);
+    
+    //벡터에 자식노드 다 담고 큐에 담기
+    for(int i=1;i<=n;i++){
+        while(!linkT[i].empty()){
+            link[i].push(-linkT[i].top());
+            linkT[i].pop();
         }
     }
-
-    vector<int> visitedOrder; // 리프 노드 방문 순서
-    while (true) {
-        int leafNode = getLeafNode(); // 리프 노드 찾기
-        visitedOrder.push_back(leafNode); // 방문 순서 저장
-        visitCount[leafNode] += 1; // 해당 노드의 방문 횟수 증가
+    
+    //target을 만들 수 있는 최소 개수만큼 공을 떨어트리기
+    while(true){
+        int ret = drop(node);
+       
+        if(ret==0){
+            answer.push_back(-1);
+            return answer;
+        }
         
-        //조건 1 :  모든 경우 중 가장 적은 숫자를 사용
-        int status = checkTarget(); // 목표 달성 여부 확인
-        if (status == 0) { // 목표 달성 시 종료
+        if(ret==1)
             break;
-        } else if (status == 2) { // 목표 달성 불가능한 경우
-            return vector<int>(1, -1); // 불가능을 표시
-        }
-    }
-
-    // 조건 2 : 사준순으로 가장 빠른 경우 : 사전 순으로 값을 할당하여 최종 결과 생성
-    vector<int> result;
-    for (int node : visitedOrder) {
-        visitCount[node] -= 1; // 방문 횟수 감소
+           
         
-        //사전순이기 때문에 1을 먼저 넣는 것이 좋음 
-        //a: 1을 넣었을 때 남은 수 :  targetValues[node] - 1
-        //b:  방문횟수에서 1개를 쓰고(위에서 1감소) 나은 개수로 채울수 있는 최대 수 : visitCount[node] * 3
-        // b가 더 크다면 가능하다. 
-        if (visitCount[node] * 3 >= targetValues[node] - 1) {
-            result.push_back(1);
-            targetValues[node] -= 1;
-        } else if (visitCount[node] * 3 >= targetValues[node] - 2) {
-            result.push_back(2);
-            targetValues[node] -= 2;
-        } else {
-            result.push_back(3);
-            targetValues[node] -= 3;
+    }
+    //사전순으로 가장 빠른 경우 만들기 
+    for(int i=0;i<v.size();i++){
+       // cout<<v[i]<<" ";
+        int curNode = v[i];
+        int score = target[curNode];
+        int nodeCnt = --node[curNode]; //남은 노드 개수
+        
+       
+       
+        //1을 넣을 수 있으면 넣기 : 남은 노드를 3으로 채웠을때 점수를 충족시킬 수 있다면
+        if(nodeCnt*3>=score-1){
+            answer.push_back(1);  
+            target[curNode]-=1;
+        }
+        //2를 넣을 수 있으면 넣기
+        else if(nodeCnt*3>=score-2){
+            answer.push_back(2);
+            target[curNode]-=2;
+        }else{
+        //3을 넣기 
+            answer.push_back(3);
+            target[curNode]-=3;
         }
     }
-
-    return result; // 최종 결과 반환
+    
+   
+    return answer;
 }
