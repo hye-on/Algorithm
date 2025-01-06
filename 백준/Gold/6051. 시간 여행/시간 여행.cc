@@ -13,6 +13,10 @@ int n;
 map<int,stack<int>>memory;
 stack<int>t;
 int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    
     cin>>n;
     vector<pair<char,int>>query(n+1);
     
@@ -40,7 +44,6 @@ int main() {
                 ps_list.pop();
         }else if(cmd=='t'){
             ps_list = memory[num-1];
-            //cout<<"fasfd "<<num<<" "<<ps_list.size()<<endl;
             
         }
 
@@ -51,7 +54,7 @@ int main() {
 
         if(memory.find(i)!=memory.end()){
             memory[i] = ps_list;
-            //cout<<"??  "<<i<<"  "<<memory[i].size()<<endl;
+           
         }
         
         
