@@ -1,122 +1,159 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
-//12:16~1:49
-//2:50 ~
-//완탐
-vector<int> ff(8);
-bool visit[8];
-vector<int> dd(8);
-vector<int> dist;
-int cnt;
+//완전 탐색
+// dist에서 1개 고르고  
+// dist에서 2개 고르고 
+
+//dist에서 8개 고르고 
+
+//순차적으로 체크 1 5 6 10  1~5, 6~10
+int n,m;
 vector<int> weak;
-int answer = -1;
-int n;
-int a,b;
+vector<int> dist;
+//int pick[8];
+bool visit[8];
 
-bool chk(int start){
-    //범위 
-    int c=0;
-    int f = weak[start];
-    int b = (f+ff[c++])%n;
 
-    int coverCnt=0;
-    int ii=0;
-    // if(cnt==3 && weak[start]==30)
-    //     cout<<f<<"  "<<b<<"  "<<endl;
-    for(int i = start; i<start+weak.size();i++){
+// void backtracking(int depth,int cnt,int idx){
+//     if(depth==cnt){
+//         return;
+//     }
+//     for(int i =0;i<dist.size();i++){
+//         if(visit[i])
+//             continue;
+//         visit[i] =true;
+//         pick[i] = dist[i];
+//         visit[i]=false;
+//     }
         
-         ii = i%weak.size();
-      
-        if(b<weak[ii] && weak[ii]<f){
-            //모든 친구 다 썼으면 
-            if(c>=cnt)
-                break;
-            
-            f = weak[ii];
-            b = (f+ff[c++])%n; 
-            // if(cnt==3 && weak[start]==30)
-            //     cout<<f<<"  "<<b<<"  "<<endl;
-            
-        }
-        else if(f<b && !(f<=weak[ii] && weak[ii]<=b)){
-            if(c>=cnt)
-                break;
-            
-            f = weak[ii];
-            b = (f+ff[c++])%n; 
-            // if(cnt==3 && weak[start]==30)
-            //     cout<<f<<"  "<<b<<"  "<<endl;
-        }
-        
-        if(f>b){
-            if(weak[ii]>=b || weak[ii]<=f)
-                coverCnt++;
+// }
+// vector<int> pickF(int cnt,vector<int>& dist){
+    
+// }
+vector<int>pick2;
+vector<int>pick;
+int answer;
+
+bool findAns;
+
+void rotate(int srt,int k){
+    int idx =srt; //weak시작위치
+    int size = pick[0];
+    int start = weak[srt] ;
+    int end = weak[srt] + size;
+    int cnt =0;
+    int didx=0;
+    //m개가 되면 다 커버한것
+    
+    while(true){
+       
+        if(idx<weak.size() && start<=weak[idx] && weak[idx]<=end){
+            cnt++;
+            idx++;
+          
         }else{
-            if(f<=weak[ii] && weak[ii]<=b)
-                coverCnt++;
+            
+            didx++;
+            start = weak[idx];
+            end = weak[idx] + pick[didx];
         }
-
-
+       
+        if(didx==k || cnt==m){
+            break;
+        }
     }
-
-  
+    
+    if(cnt==m){
+        answer=k;
+    }
+    
+    if(answer>0)
+        findAns=true;
         
-    if(coverCnt==weak.size())
-    {   
-     //  cout<<weak[start]<<"  "<<ff[0]<<endl;
-        answer=cnt;
-        return true;
-    }
-    return false;
-
 }
 
-
-//투 포인터
-void move(){
-            //커버할 시작위치
-    for(int j=0;j<weak.size();j++){
-        if(chk(j))
-            return;
-    }
-
-}
-
-
-//순열
-void backtracking(int depth,int next){
-   if(answer>-1)
-       return;
-    if(depth==cnt){
-        move();
-        return;
+void rotate_op(int srt,int k,vector<int>tmp){
+    int idx =srt; //weak시작위치
+    int size = pick[0];
+    int start = weak[srt] ;
+    int end = weak[srt] + size;
+    int cnt =0;
+    int didx=0;
+    //m개가 되면 다 커버한것
+    vector<int>weak = tmp;
+    reverse(weak.begin(),weak.end());
+    while(true){
+       
+        if(idx<weak.size() && start<=weak[idx] && weak[idx]<=end){
+            cnt++;
+            idx++;
+          
+        }else{
+            
+            didx++;
+            start = weak[idx];
+            end = weak[idx] + pick[didx];
+        }
+       
+        if(didx==k || cnt==m){
+            break;
+        }
     }
     
-    for(int i=0;i<dist.size();i++){
-        if(visit[i])
-            continue;
-        visit[i] = true;
-        ff[depth] = dist[i];
-        backtracking(depth+1,i+1);
-        visit[i]=false;
+    if(cnt==m){
+        answer=k;
     }
+    
+    if(answer>0)
+        findAns=true;
+        
 }
-
-
 int solution(int _n, vector<int> _weak, vector<int> _dist) {
-    
+
+    n =_n;
+    m = _weak.size();
     weak = _weak;
     dist = _dist;
-    n = _n;
     
-    for(int i=0;i<dist.size();i++){
-        cnt=i+1;
-        backtracking(0,0);//최대 	109600
+    sort(dist.rbegin(),dist.rend()); //내림차순
+    for(int i=0;i<_weak.size();i++){
+        weak.push_back(_weak[i]+n);
+       
     }
-   
+    
+    
+    sort(weak.begin(),weak.end());
+        for(int i=0;i<dist.size();i++){
+            //dist에서 i개 고름
+            pick = pick2;
+            //2개 가능하다면 제일 큰거 2개 고르면 됌
+            for(int k=0;k<=i;k++){
+                pick.push_back(dist[k]);
+            } 
+            sort(pick.begin(),pick.end());
+
+        do{
+            for(int k=0;k<m;k++){
+
+                rotate(k,i+1);
+              //  rotate_op(k,i+1,weak);
+                if(findAns)
+                    break;
+            }
+        }while(next_permutation(pick.begin(),pick.end()));
+            if(findAns)
+                break;
+
+        
+            
+    }
+    
+    if(!findAns)
+        answer=-1;
     return answer;
 }
