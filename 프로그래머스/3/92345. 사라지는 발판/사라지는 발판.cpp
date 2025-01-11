@@ -14,7 +14,10 @@ vector<vector<int>> block;
 //미니맥스 알고리즘 : 상대방의 수를 미리 예측하고 플레이하는 것
 
 // 현재 상태에서 둘 다 최적의 플레이를 할 때 남은 이동 횟수
+
 // 반환 값이 짝수 : 플레이어가 패배함을 의미, 홀수 : 플레이어가 승리함을 의미
+    //현재 두고 있는 수부터 마지막 수까지를 카운트, 즉 A,B 둘다 홀수가 내가 이긴것
+
 // curx, cury : 현재 플레이어의 좌표, opx, opy : 상대 플레이어의 좌표
 int solve(int curx, int cury, int opx, int opy){
     // 플레이어가 밟고 있는 발판이 사라졌다면
@@ -37,7 +40,7 @@ int solve(int curx, int cury, int opx, int opy){
         visit[curx][cury] = 0;        
         
         //항상 최적의 경로로 가야함
-        // 이길 수 있는 경우
+        // 지고 있는데 이길 수 있는 경우
         if(ret % 2 == 0 && val % 2 == 1) ret = val; 
         // 모두 질 경우 , 더 늦게 지는것을 택함
         else if(ret % 2 == 0 && val % 2 == 0) ret = max(ret, val); 
