@@ -1,98 +1,92 @@
 #include <string>
 #include <vector>
-#include <algorithm>
 #include <iostream>
-#include <queue>
+#include <algorithm>
+#include <string>
 
 using namespace std;
+//누적합
+//스트링
+//	359999
+//cout<<99*60*60 + 59*60 + 59;
 
-vector<pair<long long,long long>> t; // i~i+1구간까지 중접된 개수, 시각
-priority_queue<pair<long long,long long>, vector<pair<long long,long long>>, greater<pair<long long,long long>>> pq;
+long long ad[470000];
 
-long long timeToInt(string time) {
-    int hs = stoi(time.substr(0,2)) * 60 * 60;
-    int ms = stoi(time.substr(3,2)) * 60;
-    int s  = stoi(time.substr(6,2));
-    return hs + ms + s;
-}
-
-string intToTime(long long num) {
-    string st = "";
-    int h = num / 3600;
-    num %= 3600;
-    int m = num / 60;
-    int s = num % 60;
+//시간 -> 숫자
+long long toSeconds(string s){
+    int sum=0;
     
-    if (h <= 9)
-        st += '0';
-    st += to_string(h);
-    st += ":";
-    if (m <= 9)
-        st += '0';
-    st += to_string(m);
-    st += ":";
-    if (s <= 9)
-        st += '0';
-    st += to_string(s);
+    string time = s.substr(0,2);
+    string m = s.substr(3,2);
+    string sec = s.substr(6,2);
+  
+    return stoi(time)*60*60 + stoi(m)*60 + stoi(sec);
+}
+string secondsToS(int seconds){
+    string t = to_string(seconds/60/60);
+    seconds = seconds - stoi(t)*60*60;
+    string m = to_string(seconds/60);
+    string s = to_string(seconds%60);
+    if(t.size()==1)
+        t = "0"+t;
+    if(m.size()==1)
+        m = "0"+m;
+    if(s.size()==1)
+        s = "0"+s;
     
-    return st;
+    return t+":"+m+":"+s;
 }
-
-void insertAfterInt(string s) {
-    string startTime = s.substr(0,8);
-    string endTime = s.substr(9,8);
-    pq.push({timeToInt(startTime), 0}); //0이면 시작 시각
-    pq.push({timeToInt(endTime), 1});  //1이면 끝 시각
-}
-
 string solution(string play_time, string adv_time, vector<string> logs) {
-    long long playTimeInt = timeToInt(play_time);
-    long long duration = timeToInt(adv_time);
-
-    if (logs.empty() || duration >= playTimeInt) {
-        return "00:00:00";
-    }
-
-    for (auto lo : logs) {
-        insertAfterInt(lo);
+    string answer = "";
+    
+ 
+    int range=0;
+    range = toSeconds(play_time);
+    //시청 시간 앞, 뒤 표시
+    for(int i=0;i<logs.size();i++){
+        
+        int stT = toSeconds(logs[i].substr(0,8));
+        int endT = toSeconds(logs[i].substr(9));
+        
+        ad[stT]++;
+        ad[endT]--;
+       
     }
     
-    vector<long long> totalTime(playTimeInt + 1, 0);
+    //한번에 누적합 계산
+    for(int i=1;i<=range;i++){
+        ad[i] +=ad[i-1];
+       
+    }
+   // cout<<ad[5459]<<endl;
+    long long adT = toSeconds(adv_time);
+   // adT++;
     
-    while (!pq.empty()) {
-        long long time = pq.top().first;
-        int type = pq.top().second;
-        pq.pop();
-     
-        if (type == 0) { // 시작 시간
-            totalTime[time]++;
-        } else { // 종료 시간
-            totalTime[time]--;
+    //최댓값 구하기
+    int idx1 =0;
+    int idx2=0;
+    long long ans=0;
+    long long sumT=0;//ad[0];
+    int adStartT =0;
+
+    while(idx2<=range && idx1<=idx2){
+              
+         sumT+=ad[idx2];
+         idx2++;
+        
+        if(sumT>ans){
+            adStartT = idx1;
+            ans = sumT;
         }
-    }
-    
-    // 누적 합 계산
-    for (int i = 1; i <= playTimeInt; i++) {
-        totalTime[i] += totalTime[i-1];
-    }
-    
-    // 구간 합 계산
-    // i까지의 합 
-    for (int i = 1; i <= playTimeInt; i++) {
-        totalTime[i] += totalTime[i-1];
-    }
-    
-    long long maxTime = totalTime[duration - 1];
-    long long ansInt = 0;
-    
-    for (long long i = duration; i < playTimeInt; i++) {
-        //i까지의 합 - j까지의 합 = j-i구간 합
-        long long currentTime = totalTime[i] - totalTime[i - duration];
-        if (currentTime > maxTime) {
-            maxTime = currentTime;
-            ansInt = i - duration + 1;
+         if(idx2-idx1==adT){
+            sumT-=ad[idx1];
+            idx1++;
+            continue;
         }
+        
     }
-
-    return intToTime(ansInt);
+    
+   
+    answer = secondsToS(adStartT);
+    return answer;
 }
