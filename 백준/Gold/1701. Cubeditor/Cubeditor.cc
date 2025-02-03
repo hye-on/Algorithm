@@ -1,26 +1,30 @@
 #include <iostream>
+#include <vector>
+#include<string>
 
 using namespace std;
-//5000*5000*5000-> 75000000000
-//투포인터로 하고 최적화
-string s;
+
+vector<int> getPi(string p){
+    vector<int> pi(p.size());
+    for(int i=1,j=0;i<p.size();i++){
+        while(j>0 && p[i]!=p[j])
+            j=pi[j-1];
+        if(p[i]==p[j])
+            pi[i] = ++j;
+    }
+    return pi;
+}
 
 int main() {
+
+    string s;
     cin>>s;
     int ans=0;
     for(int i=0;i<s.size();i++){
-        for(int j=i+1;j<s.size()-ans;j++){
-            if(s[i]==s[j]){
-                int cnt=0;
-                for(int k=0;j+k<s.size();k++){
-                    if(s[i+k]==s[j+k]){
-                        cnt++;
-                    }else{
-                        break;
-                    }
-                }
-                ans = max(ans,cnt);
-            }
+        vector<int>pi = getPi(s.substr(i));
+        for(int j=0;j<s.size()-i;j++){
+            if(pi[j]>ans)
+                ans = pi[j];
         }
     }
     cout<<ans;
