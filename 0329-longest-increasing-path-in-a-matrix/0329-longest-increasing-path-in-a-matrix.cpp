@@ -1,6 +1,9 @@
 class Solution {
     
-    int dfs(int r,int c ,vector<vector<int>>& matrix,vector<vector<int>>& dp,int n, int m,int prev){
+    int dfs(int r,int c ,vector<vector<int>>& matrix,vector<vector<int>>& dp,int prev){
+
+        int n = matrix.size();
+        int m = matrix[0].size();
 
         if(r<0 || r>=n || c<0 || c>=m || prev>=matrix[r][c]) return 0;
 
@@ -14,7 +17,7 @@ class Solution {
         for(int i=0;i<4;i++){
             int nr = r+dy[i];
             int nc = c+dx[i];
-            ans = max(ans,dfs(nr,nc,matrix,dp,n,m,matrix[r][c])+1);
+            ans = max(ans,dfs(nr,nc,matrix,dp,matrix[r][c])+1);
         }
         dp[r][c] = ans;
         return  dp[r][c];
@@ -32,7 +35,7 @@ public:
        
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
-                answer = max(answer,dfs(i,j,matrix, dp,n,m,-1));             
+                answer = max(answer,dfs(i,j,matrix, dp,-1));             
             }
         }
         
