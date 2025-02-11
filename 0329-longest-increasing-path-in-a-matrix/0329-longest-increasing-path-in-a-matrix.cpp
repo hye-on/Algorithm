@@ -5,7 +5,7 @@ class Solution {
         int n = matrix.size();
         int m = matrix[0].size();
 
-        
+        if(r<0 || r>=n || c<0 || c>=m || prev>=matrix[r][c]) return 0;
 
         if(dp[r][c]!=-1) 
             return dp[r][c];
@@ -17,8 +17,6 @@ class Solution {
         for(int i=0;i<4;i++){
             int nr = r+dy[i];
             int nc = c+dx[i];
-            if(nr<0 || nr>=n || nc<0 || nc>=m || matrix[r][c]>=matrix[nr][nc]) 
-                continue;
             ans = max(ans,dfs(nr,nc,matrix,dp,matrix[r][c])+1);
         }
         dp[r][c] = ans;
