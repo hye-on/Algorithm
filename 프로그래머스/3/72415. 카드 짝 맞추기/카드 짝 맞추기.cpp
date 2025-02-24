@@ -57,22 +57,23 @@ int bfs(int dest){
 
 int solution(vector<vector<int>> b, int rr, int cc) {
     bool card_check[7] = {0,};
+    int depth =0;
     for(int i=0;i<b.size();i++)
-        for(int j=0;j<b[i].size();j++)
-            if(b[i][j])
-                card_check[b[i][j]] = true;
-    for(int i=1;i<7;i++)
-        if(card_check[i])
+        for(int j=0;j<b[i].size();j++){
+             depth = max(b[i][j],depth);
+        }
+   
+    for(int i=1;i<=depth;i++)
             card.push_back(i);
     do{
         board = b;
         r = rr, c = cc;
         int tmp = 0;
         for(int i=0;i<card.size();i++){
-            tmp += bfs(card[i]);
-            tmp += bfs(card[i]);
+            tmp += bfs(card[i]); // 커서에서 다음 숫자까지
+            tmp += bfs(card[i]); // 같은 숫자를 찾음 1-1, 2-2
         }
         answer = min(answer,tmp);
-    }while(next_permutation(card.begin(),card.end()));
+    }while(next_permutation(card.begin(),card.end())); //순열
     return answer;
 }
