@@ -12,6 +12,9 @@ long visit[1001];
 long cnt;
 
 int main() {
+    ios_base :: sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
     cin>>n>>m;
     vector<pair<long,long>>v;
     int tmp=0;
@@ -28,66 +31,30 @@ int main() {
     long num = 1000000001;
     long long ans=0;
     sort(v.begin(),v.end());
-   
-    
+
     for(int i=0;i<n*m;i++){
         long s  = v[i].first;
         long f = v[i].second;
-        //포함되었으면 다음
-        if(visit[f]>0){
-            visit[f]++;
-            continue;
-        }
-       
-        cnt++;
+        
         visit[f]++;
-       
+        
+        if(visit[f]==1)
+            cnt++;
+
         //n개가 되었으면 답 갱신
-        if(cnt==n){
+        while(cnt==n){
             
             long cost = s - v[idx].first;
             if(cost<num){
-               
-                num = cost;
-                ans = 1;
-                
-            }else if(cost==num){
-                ans++;
+                num = cost;          
             }
-
-          
-            
+               
             visit[v[idx].second]--;
             if(visit[v[idx].second]==0){
                 cnt--;
             }
-            idx++;
-                        
-        }
-      
-        if(cnt<n)
-            continue;
-        
-        while(visit[v[idx].second]-1 > 0){
-            visit[v[idx].second]--;
-            idx++;
-        }
-       
-        long cost = s - v[idx].first;
-        if(cost<num){
-            
-            num = cost;
-            ans = 1;
-           
-        }else if(cost==num){
-                ans++;
-        }
-         visit[v[idx].second]--;
-        if(visit[v[idx].second]==0){
-                cnt--;
-        }
-        idx++;
-        
+            idx++;              
+        }  
         
     }
 
