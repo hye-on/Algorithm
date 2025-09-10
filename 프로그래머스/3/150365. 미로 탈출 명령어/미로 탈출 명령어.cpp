@@ -12,7 +12,7 @@ int dy[] ={1,0,0,-1};
 int dx[] ={0,-1,1,0};
 char cc[] ={'d','l','r','u'};
 
-void dfs(string dir,int dist,int i,int j){ //변수 선언 때문에 헷갈렸음
+void dfs(string dir,int dist,int i,int j){ 
     if(answer.size()>0)
         return;
     if(dist==0 ){   
@@ -20,10 +20,8 @@ void dfs(string dir,int dist,int i,int j){ //변수 선언 때문에 헷갈렸�
             answer=dir;
         return;
     }
-    int distance = abs(r-i) + abs(c-j); //변수 오타 
+    int distance = abs(r-i) + abs(c-j); 
     
-    if((dist-distance)%2==1)
-        return;
    if(distance>dist)
        return;
     
