@@ -1,70 +1,79 @@
 #include <string>
 #include <vector>
 #include <iostream>
-
 using namespace std;
-vector<bool>visit(1001);
-vector<bool>my(1001);
-int solution(int coin, vector<int> cards) {
-    int answer = 1;
-    int n = cards.size();
-   
-    int pair=0, st_pair=0;
-    // 1개를 뽑아서 pair를 만들 수 있다면 구매
-    // 2개를 뽑아서 pair를 만들 수 있다면 보관
-    // 아직 다른 짝이 나오지 않았다면 나왔다는 표시만 해준다.
-    
-    
-     // n/3장 가진다. 
-    for(int i=0;i<n/3;i++){
-        if(visit[n+1-cards[i]])
-            pair++;
-        
-        visit[cards[i]]=true;
-        my[cards[i]]=true;
-      
+
+// 5:38
+//초기화 n/3 장
+// 카드 2장 뽑기
+// 카드는 돈내고 가지거나 버리거나
+// n+1 카드 내야함 -> 못내면 죽음 
+
+// 카드를 사서 1쌍이될 수 있으면 바로 삼
+// 못사면 "살수 있었던 카드리스트(a)에 넣어둠"
+// 카드를 사서 a에 있는 카드랑 같이 한쌍이 될 수 있다면
+  //아직은 사지 말고 후보에 넣어둠 -> 나중에 낼 카드가 없고 코인이 남아있을 때 구매
+
+// 현재 낼 수 있는 카드쌍 + 구매하면 낼 수 있는 카드쌍 변수 2개 필요
+
+int n;
+int card_pair, pos_card_pair;
+vector<int>card_status; // 0: 아직 안나옴, 1:나옴 구매x, 2:나옴 구매o
+vector<int> cards;
+int coin;
+
+void pick(int num){
+  int cd_n = n+1-num;
+  
+  if(coin>0 && card_status[cd_n]==2){ //구매
+        coin--;
+        card_status[num] =2;
+        card_pair++;
+    }else if(card_status[cd_n]==0){ //카드 나온거 표시
+        card_status[num] = 1;
+    }else if(card_status[cd_n]==1){ //카드 나온거 표시 + 구매가능쌍 
+        card_status[num] =1;
+        pos_card_pair++;
     }
-   
+    
+}
+
+int solution(int _coin, vector<int> _cards) {
+    int answer = 1;
+    
+    n = _cards.size();
+    cards = _cards;
+    coin = _coin;
+    card_status.resize(n+1,0);
+        
+    // 초기화 하는 동안 카드쌍 세기
+    for(int i=0;i<n/3;i++){
+        card_status[cards[i]] =2;
+        int cd_n = n+1-cards[i];
+        if(card_status[cd_n]==2)
+            card_pair++;
+    }
+    
+  
+    //게임
     for(int i=n/3;i<n;i+=2){
-        int c1 = cards[i];
-        int c2 = cards[i+1];
-        
-        if(coin>0 && my[n+1-c1]){
-           
-            coin--;
-            pair++;
-        }else if(visit[n+1-c1]){
-             st_pair++;
-        }
-        visit[c1]=true;
-        if(coin>0 && my[n+1-c2]){
-          
-            coin--;
-            pair++;
-        }else if(visit[n+1-c2]){
-           st_pair++;
-         }
+        int cd_n = n + 1 - cards[i];
+       pick(cards[i]);
+       pick(cards[i+1]); 
        
-        
-        // if(c1+c2==(n+1))
-        //     st_pair++;  
-        //  }
-        
-        visit[c2]=true;
-        
-        if(pair>0){
-            answer++;
-            pair--;
-        }else if(coin>=2 && st_pair>0){
-            answer++;
-            coin-=2;
-            st_pair--;
-        }else
+        if(card_pair==0){
+            if(coin<2)
+                break;
+            else if(pos_card_pair>0){
+                coin-=2;
+                card_pair++;
+                pos_card_pair--;
+            }
+        }
+        if(card_pair==0)
             break;
-        
-    }    
-   
-    
-    
+        card_pair--;
+        answer++;
+    }
     return answer;
 }
