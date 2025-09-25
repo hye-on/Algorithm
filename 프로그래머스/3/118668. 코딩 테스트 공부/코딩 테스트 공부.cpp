@@ -1,38 +1,24 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include<iostream>
-
 using namespace std;
 
-// 케이스 3개 , 알고력, 코딩력, 문제풀기
-// 알고력 범위 : max(초기 알고력,문제의 맥스 알고력) ~ max(초기알고력, 문제의 맥스 알고력)
-// dp
-
 int dp[181][181];
-
+// 5 2   3 7
+// 2 5   7 4
 int solution(int alp, int cop, vector<vector<int>> problems) {
     int answer = 0;
-
-    int alp_max=0;
-    int cop_max=0;
+    int alp_max=0, cop_max=0;
     
-    //초기값 설정
     for(int i=0;i<problems.size();i++){
-        int alp_req = problems[i][0];
-        int cop_req = problems[i][1];
-        
-        alp_max = max(alp_max,alp_req);
-        cop_max = max(cop_max,cop_req);
-              
+        alp_max = max(alp_max, problems[i][0]);
+        cop_max = max(cop_max, problems[i][1]);
     }
     fill(dp[0],dp[181],2000000000);
-    
-    dp[alp][cop]=0;
-    dp[min(alp_max,alp)][cop]=0;
-    dp[alp][min(cop_max,cop)]=0;
-    dp[min(alp_max,alp)][min(cop_max,cop)]=0;
-    
+    dp[alp][cop] =0;
+    dp[min(alp,alp_max)][cop] =0;
+    dp[min(alp,alp_max)][min(cop,cop_max)] =0;
+    dp[alp][min(cop,cop_max)] =0;
     
     for(int i=min(alp_max,alp);i<=alp_max;i++){
         for(int j=min(cop_max,cop);j<=cop_max;j++){
@@ -73,4 +59,6 @@ int solution(int alp, int cop, vector<vector<int>> problems) {
     
   
     return answer = dp[alp_max][cop_max];
+    
+    return answer;
 }
