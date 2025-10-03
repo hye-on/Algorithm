@@ -1,39 +1,49 @@
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <cstring>
 
 using namespace std;
 
-
-bool cmp(vector<int> &a, vector<int> &b){
-    if (a[0] - a[1] == b[0] - b[1])
-        return a[0] / a[1] > b[0] / b[1];
-    else
-        return a[0] - a[1] > b[0] - b[1];
-}
 int solution(vector<vector<int>> info, int n, int m) {
-    int answer = 0;
+    int itemCnt = info.size();
     
-    sort(info.begin(),info.end(),cmp);
+    // dp[i][a][b] : i번째 범죄까지 고려, A 누적 a, B 누적 b 도달 가능 여부
+    bool dp[41][121][121];
+    memset(dp, false, sizeof(dp));
     
-    int a_sum=0,b_sum=0;
+    // 초기 상태: 아무것도 안 한 상태
+    dp[0][0][0] = true;
     
-    for(int i=0;i<info.size();i++){
+    // DP 전이
+    for (int i = 0; i < itemCnt; i++) {
+        int traceA = info[i][0];
+        int traceB = info[i][1];
         
-        int a_cost = info[i][0];
-        int b_cost = info[i][1];
-        
-        if(b_cost+b_sum<m)
-            b_sum+=b_cost;
-        else
-            a_sum+=a_cost;
-        
-        if(a_sum>=n){
-            return -1;
+        for (int a = 0; a < n; a++) {
+            for (int b = 0; b < m; b++) {
+                if (!dp[i][a][b]) continue;
+                
+                // i번째 범죄를 A로 처리
+                if (a + traceA < n) {
+                    dp[i+1][a + traceA][b] = true;
+                }
+                
+                // i번째 범죄를 B로 처리
+                if (b + traceB < m) {
+                    dp[i+1][a][b + traceB] = true;
+                }
+            }
         }
-        
-        
     }
     
-    return answer=a_sum;
+    // 모든 범죄를 처리한 후 최소 A 값 찾기
+    for (int a = 0; a < n; a++) {
+        for (int b = 0; b < m; b++) {
+            if (dp[itemCnt][a][b]) {
+                return a;
+            }
+        }
+    }
+    
+    return -1;
 }
